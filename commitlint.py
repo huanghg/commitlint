@@ -78,10 +78,33 @@ def setupHusky():
 def setuphook():
 	if not os.path.exists(os.environ['HOME']+"/.git_template"):
 		print "start clone git_template"
-		os.system("git clone https://github.com/huanghg/git_template ~/.git_template")
+		os.system("git clone http://git.code.oa.com/VBank-APP/git_template ~/.git_template")
 		os.system("git config --global init.templatedir '~/.git_template/template'")
 		os.system("git init")
 		pass
+	pass
+
+def modifygitignore():
+	if os.path.exists(".gitignore"):
+		print "start modify .gitignore"
+		ignoreDict = {'commitlint.config.js':False, 'node_modules':False, 'package.json':False, 'package-lock.json':False}
+		with open(".gitignore", "r") as f:
+			for line in f.readlines():
+				for key in ignoreDict.keys():
+					if key in line:
+						ignoreDict[key] = True
+					pass
+				pass
+		f.close()
+
+		with open(".gitignore", "a") as f:
+			for item in ignoreDict.items():
+				if item[1] == False:
+					f.write(str(item[0]+"\n"))
+					pass
+		f.close()
+	else:
+		print "❌没找到gitignore文件"
 	pass
 
 def commit():
@@ -108,7 +131,7 @@ def setup():
 
 	setuphook()
 
-	os.system("rm -rf commitlint.py")
+	modifygitignore()
 
 	commit() 
 
